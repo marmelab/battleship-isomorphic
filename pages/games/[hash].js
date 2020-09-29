@@ -1,95 +1,109 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-const PLAYER = "PLAYER";
-const OPPONENT = "OPPONENT";
+const PLAYER = 'PLAYER';
+const OPPONENT = 'OPPONENT';
 
 function Game({ data }) {
-  const [visibleBoard, setVisibleBoard] = useState(PLAYER);
+    const [visibleBoard, setVisibleBoard] = useState(PLAYER);
 
-  function toggleBoard() {
-    setVisibleBoard(visibleBoard === PLAYER ? OPPONENT : PLAYER);
-  }
+    function toggleBoard() {
+        setVisibleBoard(visibleBoard === PLAYER ? OPPONENT : PLAYER);
+    }
 
-  return (
-    <main className="w-screen p-5 flex flex-col">
-      <h1 className="text-2xl">Game page {data.game_hash}</h1>
+    return (
+        <main className="w-screen p-5 flex flex-col">
+            <h1 className="text-2xl">Game page {data.game_hash}</h1>
 
-      <div className="flex items-center justify-between my-2">
-        {visibleBoard == PLAYER ? <h2>Ma flotte</h2> : <h2>Flotte Adverse</h2>}
+            <div className="flex items-center justify-between my-2">
+                {visibleBoard === PLAYER ? (
+                    <h2>Ma flotte</h2>
+                ) : (
+                    <h2>Flotte Adverse</h2>
+                )}
 
-        <button onClick={() => toggleBoard()} className="btn-blue">
-          {visibleBoard == PLAYER ? "Voir la flotte Adverse" : "Voir ma flotte"}
-        </button>
-      </div>
+                <button onClick={() => toggleBoard()} className="btn-blue">
+                    {visibleBoard === PLAYER
+                        ? 'Voir la flotte Adverse'
+                        : 'Voir ma flotte'}
+                </button>
+            </div>
 
-      <div className="relative pb-full">
-        <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-          {[...Array(100).keys()].map((square, i) => (
-            <div key={i} className="w-full h-full bg-blue-500"></div>
-          ))}
-        </div>
-        {visibleBoard == PLAYER ? (
-          <>
-            <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-              {data.ships.map((ship, i) => (
-                <div
-                  key={i}
-                  className="p-1"
-                  style={formatGridAttributes(ship.grid_attributes)}
-                >
-                  <div className="w-full h-full bg-green-500 rounded-full"></div>
+            <div className="relative pb-full">
+                <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
+                    {[...Array(100).keys()].map((square, i) => (
+                        <div
+                            key={i}
+                            className="w-full h-full bg-blue-500"
+                        ></div>
+                    ))}
                 </div>
-              ))}
+                {visibleBoard === PLAYER ? (
+                    <>
+                        <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
+                            {data.ships.map((ship, i) => (
+                                <div
+                                    key={i}
+                                    className="p-1"
+                                    style={formatGridAttributes(
+                                        ship.grid_attributes
+                                    )}
+                                >
+                                    <div className="w-full h-full bg-green-500 rounded-full"></div>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
+                            {createSquares().map((square, i) => (
+                                <div
+                                    key={i}
+                                    className="w-full h-full bg-blue-500"
+                                ></div>
+                            ))}
+                        </div>
+                    </>
+                )}
             </div>
-          </>
-        ) : (
-          <>
-            <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-              {createSquares().map((square, i) => (
-                <div key={i} className="w-full h-full bg-blue-500"></div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-    </main>
-  );
+        </main>
+    );
 }
 
 export async function getServerSideProps(context) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_HOST}/games/${context.params.hash}`
-  );
-  const data = await res.json();
-  return { props: { data } };
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_HOST}/games/${context.params.hash}`
+    );
+    const data = await res.json();
+    return { props: { data } };
 }
 
 const createSquares = () => {
-  const squares = [];
-  for (let i = 0; i < 100; i++) {
-    squares.push(i);
-  }
-  return squares;
+    const squares = [];
+    for (let i = 0; i < 100; i++) {
+        squares.push(i);
+    }
+    return squares;
 };
 
-const formatGridAttributes = (str) => {
-  const res = str
-    .replace(/\s/g, "")
-    .split(";")
-    .reduce((acc, attr) => {
-      const [key, value] = attr.split(":");
-      return {
-        ...acc,
-        [snakeToCamel(key)]: value,
-      };
-    }, {});
+const formatGridAttributes = str => {
+    const res = str
+        .replace(/\s/g, '')
+        .split(';')
+        .reduce((acc, attr) => {
+            const [key, value] = attr.split(':');
+            return {
+                ...acc,
+                [snakeToCamel(key)]: value,
+            };
+        }, {});
 
-  return res;
+    return res;
 };
 
-const snakeToCamel = (str) =>
-  str.replace(/([-_][a-z])/g, (group) =>
-    group.toUpperCase().replace("-", "").replace("_", "")
-  );
+const snakeToCamel = str =>
+    str.replace(/([-_][a-z])/g, group =>
+        group.toUpperCase().replace('-', '').replace('_', '')
+    );
 
 export default Game;
