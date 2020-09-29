@@ -8,7 +8,7 @@ function Game({ data }) {
         <div className={styles.fleet}>
           {data.ships.map((ship, i) => (
             <div
-              key={i}
+              key={ship.id}
               className={styles.square}
               style={formatGridAttributes(ship.grid_attributes)}
             >
