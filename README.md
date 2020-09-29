@@ -14,7 +14,7 @@ Then, create an `.env.local` at the root of the project and add:
 API_HOST=http://localhost/api
 ```
 
-FInally, run the development server:
+Finally, run the development server:
 
 ```bash
 make start
