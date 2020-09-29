@@ -1,0 +1,18 @@
+language: node_js
+
+node_js:
+    - '12'
+
+before_script:
+    - make install
+
+script:
+    - make test
+
+branches:
+    only:
+        - master
+
+cache:
+    directories:
+        - .yarn

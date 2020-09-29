@@ -8,3 +8,6 @@ install: ## Install dependencies
 
 start: ## Start server
 	yarn dev
+
+test: ## Run tests
+	yarn test
