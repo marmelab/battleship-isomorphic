@@ -2,7 +2,19 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First, install the project:
+
+```bash
+make install
+```
+
+Then, create an `.env.local` at the root of the project and add:
+
+```
+API_HOST=http://localhost/api
+```
+
+Finally, run the development server:
 
 ```bash
 make start

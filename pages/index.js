@@ -5,6 +5,13 @@ import { useRouter } from 'next/router'
 export default function Home() {
   const router = useRouter()
 
+  async function createGame() {
+    const res = await fetch(`${process.env.API_HOST}/games`, {method: 'POST'})
+    const data = await res.json()
+
+    router.push(`/games/${data.game_hash}`)
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -19,13 +26,4 @@ export default function Home() {
       </main>
     </div>
   )
-
-  async function createGame() {
-    const res = await fetch('http://localhost/api/games', {method: 'POST'})
-    const json = await res.json()
-
-    console.log(json)
-
-    router.push('/game')
-  }
 }
