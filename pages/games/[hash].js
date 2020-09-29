@@ -1,17 +1,13 @@
 import { useState } from "react";
 
-function Game({ data }) {
-  const PLAYER = "PLAYER";
-  const OPPONENT = "OPPONENT";
+const PLAYER = "PLAYER";
+const OPPONENT = "OPPONENT";
 
+function Game({ data }) {
   const [visibleBoard, setVisibleBoard] = useState(PLAYER);
 
   function toggleBoard() {
-    if (visibleBoard == PLAYER) {
-      setVisibleBoard(OPPONENT);
-    } else {
-      setVisibleBoard(PLAYER);
-    }
+    setVisibleBoard(visibleBoard === PLAYER ? OPPONENT : PLAYER);
   }
 
   return (
@@ -19,22 +15,21 @@ function Game({ data }) {
       <h1 className="text-2xl">Game page {data.game_hash}</h1>
 
       <div className="flex items-center justify-between my-2">
-        {visibleBoard == PLAYER ? <h2>Ma flotte</h2>:<h2>Flotte Adverse</h2>}
-        
+        {visibleBoard == PLAYER ? <h2>Ma flotte</h2> : <h2>Flotte Adverse</h2>}
+
         <button onClick={() => toggleBoard()} className="btn-blue">
-          {visibleBoard == PLAYER ? 'Voir la flotte Adverse':'Voir ma flotte'}
+          {visibleBoard == PLAYER ? "Voir la flotte Adverse" : "Voir ma flotte"}
         </button>
       </div>
 
       <div className="relative pb-full">
+        <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
+          {[...Array(100).keys()].map((square, i) => (
+            <div key={i} className="w-full h-full bg-blue-500"></div>
+          ))}
+        </div>
         {visibleBoard == PLAYER ? (
           <>
-            
-            <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-              {createSquares().map((square, i) => (
-                <div key={i} className="w-full h-full bg-blue-500"></div>
-              ))}
-            </div>
             <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
               {data.ships.map((ship, i) => (
                 <div
@@ -62,7 +57,9 @@ function Game({ data }) {
 }
 
 export async function getServerSideProps(context) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/games/${context.params.hash}`);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_HOST}/games/${context.params.hash}`
+  );
   const data = await res.json();
   return { props: { data } };
 }
