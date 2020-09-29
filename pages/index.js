@@ -6,7 +6,7 @@ export default function Home() {
   const router = useRouter()
 
   async function createGame() {
-    const res = await fetch('http://localhost/api/games', {method: 'POST'})
+    const res = await fetch(`${process.env.API_HOST}/games`, {method: 'POST'})
     const data = await res.json()
 
     router.push(`/games/${data.game_hash}`)

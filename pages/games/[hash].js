@@ -23,7 +23,7 @@ function Game({ data }) {
 }
 
 export async function getServerSideProps(context) {
-  const res = await fetch(`http://localhost/api/games/${context.params.hash}`);
+  const res = await fetch(`${process.env.API_HOST}/games/${context.params.hash}`);
   const data = await res.json();
 
   return { props: { data } };
