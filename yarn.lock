@@ -2814,7 +2814,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:4.13.0, browserslist@npm:^4.12.0, browserslist@npm:^4.8.5":
+"browserslist@npm:4.13.0":
   version: 4.13.0
   resolution: "browserslist@npm:4.13.0"
   dependencies:
@@ -2828,7 +2828,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.6.4":
+"browserslist@npm:^4.12.0, browserslist@npm:^4.6.4, browserslist@npm:^4.8.5":
   version: 4.14.5
   resolution: "browserslist@npm:4.14.5"
   dependencies:
@@ -3990,9 +3990,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.3.488, electron-to-chromium@npm:^1.3.571":
-  version: 1.3.574
-  resolution: "electron-to-chromium@npm:1.3.574"
-  checksum: 671aa9db3fbebb2538612195d667e73b981ea60bd64f7d1d42b55f406321fd4111d6409c4453ef2138f9ab36f303e84269490e9e1fb18762bc9529f89ab076b6
+  version: 1.3.576
+  resolution: "electron-to-chromium@npm:1.3.576"
+  checksum: 1a96ef4a4f04f4da2b76b546c76439e7aff331d7da2085c633266077f6b9458992693e420bcd8682b3d4274de4473cb280d6c49a9341de724acbd7969352d4d7
   languageName: node
   linkType: hard
 
@@ -7888,7 +7888,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"postcss@npm:7.0.32, postcss@npm:^7.0.14, postcss@npm:^7.0.26, postcss@npm:^7.0.27, postcss@npm:^7.0.32, postcss@npm:^7.0.5, postcss@npm:^7.0.6":
+"postcss@npm:7.0.32":
   version: 7.0.32
   resolution: "postcss@npm:7.0.32"
   dependencies:
@@ -7910,14 +7910,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"postcss@npm:^7.0.11, postcss@npm:^7.0.17, postcss@npm:^7.0.18, postcss@npm:^7.0.2":
-  version: 7.0.34
-  resolution: "postcss@npm:7.0.34"
+"postcss@npm:^7.0.11, postcss@npm:^7.0.14, postcss@npm:^7.0.17, postcss@npm:^7.0.18, postcss@npm:^7.0.2, postcss@npm:^7.0.26, postcss@npm:^7.0.27, postcss@npm:^7.0.32, postcss@npm:^7.0.5, postcss@npm:^7.0.6":
+  version: 7.0.35
+  resolution: "postcss@npm:7.0.35"
   dependencies:
     chalk: ^2.4.2
     source-map: ^0.6.1
     supports-color: ^6.1.0
-  checksum: 60e02f81cedf98bc5f902e72ca7cfef20dc5789e367fd3620a41a00719ff3226796831f4ba55db7a1a1c595564fe0fa9a0a2fa6d8b2477d10ab83422fc0f91de
+  checksum: 8a979ea9799dd48399337708a395ddb8cf0e328515201ed35c99f5ba5eaa7688eae65764c570bf49b5be0b106226e2f222abc210de068b3d3da9a9a3bbb70567
   languageName: node
   linkType: hard
 
