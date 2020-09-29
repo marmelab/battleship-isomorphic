@@ -1,32 +1,63 @@
+import { useState } from "react";
+
 function Game({ data }) {
+  const PLAYER = "PLAYER";
+  const OPPONENT = "OPPONENT";
+
+  const [visibleBoard, setVisibleBoard] = useState(PLAYER);
+
+  function toggleBoard() {
+    if (visibleBoard == PLAYER) {
+      setVisibleBoard(OPPONENT);
+    } else {
+      setVisibleBoard(PLAYER);
+    }
+  }
 
   return (
-    <div className="w-screen p-5 flex flex-col">
+    <main className="w-screen p-5 flex flex-col">
       <h1 className="text-2xl">Game page {data.game_hash}</h1>
 
-      <div className="py-2"></div>
+      <div className="flex items-center justify-between my-2">
+        {visibleBoard == PLAYER ? <h2>Ma flotte</h2>:<h2>Flotte Adverse</h2>}
+        
+        <button onClick={() => toggleBoard()} className="btn-blue">
+          {visibleBoard == PLAYER ? 'Voir la flotte Adverse':'Voir ma flotte'}
+        </button>
+      </div>
 
       <div className="relative pb-full">
-
-        <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-          {createSquares().map((square, i) => (
-            <div key={i} className="w-full h-full bg-blue-500"></div>
-          ))}
-        </div>
-
-        <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-          {data.ships.map((ship, i) => (
-            <div
-              key={ship.id}
-              className="p-1"
-              style={formatGridAttributes(ship.grid_attributes)}
-            >
-              <div className="w-full h-full bg-green-500 rounded-full"></div>
+        {visibleBoard == PLAYER ? (
+          <>
+            
+            <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
+              {createSquares().map((square, i) => (
+                <div key={i} className="w-full h-full bg-blue-500"></div>
+              ))}
             </div>
-          ))}
-        </div>
+            <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
+              {data.ships.map((ship, i) => (
+                <div
+                  key={i}
+                  className="p-1"
+                  style={formatGridAttributes(ship.grid_attributes)}
+                >
+                  <div className="w-full h-full bg-green-500 rounded-full"></div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
+              {createSquares().map((square, i) => (
+                <div key={i} className="w-full h-full bg-blue-500"></div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
-    </div>
+    </main>
   );
 }
 
