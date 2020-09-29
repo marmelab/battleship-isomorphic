@@ -6,14 +6,13 @@ function Home({ data }) {
     const router = useRouter();
 
     async function createGame() {
-        const data = await api.createGame();
-        router.push(`/games/${data.game_hash}`);
+        const newGame = await api.createGame();
+        router.push(`/games/${newGame.game_hash}`);
     }
 
     async function joinGame(gameHash) {
-        const data = await api.joinGame(gameHash);
-        console.log(data);
-        router.push(`/games/${data.game_hash}`);
+        const game = await api.joinGame(gameHash);
+        router.push(`/games/${game.game_hash}`);
     }
 
     return (
