@@ -11,7 +11,7 @@ make install
 Then, create an `.env.local` at the root of the project and add:
 
 ```
-API_HOST=http://localhost/api
+NEXT_PUBLIC_API_HOST=http://localhost/api
 ```
 
 Finally, run the development server:
