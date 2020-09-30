@@ -7,12 +7,14 @@ function Home({ data }) {
 
     async function createGame() {
         const newGame = await api.createGame();
-        router.push(`/games/${newGame.game_hash}`);
+        router.push(
+            `/games/${newGame.game_hash}?player_hash=${newGame.player_hash}`
+        );
     }
 
     async function joinGame(gameHash) {
         const game = await api.joinGame(gameHash);
-        router.push(`/games/${game.game_hash}`);
+        router.push(`/games/${game.game_hash}?player_hash=${game.player_hash}`);
     }
 
     return (
