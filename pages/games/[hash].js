@@ -53,7 +53,7 @@ function Game({ data, playerHash }) {
                 </h2>
             ) : (
                 <h2 className="text-orange-500 font-bold uppercase">
-                    En attent de l'adversaire
+                    En attente de l'adversaire
                 </h2>
             )}
             <div className="flex items-center justify-between my-2">
