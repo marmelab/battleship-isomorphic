@@ -11,7 +11,6 @@ export const createGame = async () => {
 };
 
 export const joinGame = async (gameHash) => {
-  console.log("join", gameHash);
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_HOST}/games/${gameHash}/join`,
     {
