@@ -9,8 +9,14 @@ install: ## Install dependencies
 start: ## Start server
 	yarn dev
 
+start-prod: ## Start production server
+	yarn start
+
 test: ## Run tests
 	yarn test
 
-cypress-open: ## Open cypress
+build: ## Build next for production
+	yarn build
+
+demo: ## Open cypress
 	yarn cypress open

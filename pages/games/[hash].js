@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import * as api from '../../api';
+import Link from 'next/link';
 
 const PLAYER = 'PLAYER';
 const OPPONENT = 'OPPONENT';
+
+const GAME_OPEN = 'OPEN';
+const GAME_OVER = 'OVER';
 
 function Game({ data, playerHash }) {
     const [visibleBoard, setVisibleBoard] = useState(PLAYER);
@@ -12,8 +16,12 @@ function Game({ data, playerHash }) {
     const [opponentSunkShips, setOpponentSunkShips] = useState(
         data.opponent_sunk_ships
     );
+    const [gameStatus, setGameStatus] = useState(data.game_status);
+    const [winner, setWinner] = useState(data.winner);
 
     const isCurrentPlayer = currentPlayer.hash === playerHash;
+    const isGameOpen = gameStatus === GAME_OPEN;
+    const isGameOver = gameStatus === GAME_OVER;
 
     function toggleBoard() {
         setVisibleBoard(visibleBoard === PLAYER ? OPPONENT : PLAYER);
@@ -22,9 +30,11 @@ function Game({ data, playerHash }) {
     async function refreshGameState() {
         const res = await api.getGame(data.game, playerHash);
         setCurrentPlayer(res.current_player);
+        setGameStatus(res.game_status);
         setHits(res.hits);
         setShoots(res.shoots);
         setOpponentSunkShips(res.opponent_sunk_ships);
+        setWinner(res.winner);
     }
 
     async function shoot(x, y) {
@@ -44,8 +54,49 @@ function Game({ data, playerHash }) {
         return () => clearInterval(interval);
     }, [isCurrentPlayer]);
 
+    useEffect(() => {
+        if (!isGameOpen) {
+            return;
+        }
+
+        const interval = setInterval(() => {
+            refreshGameState();
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [isGameOpen]);
+
     return (
-        <main className="w-screen p-5 flex flex-col">
+        <main className="w-screen h-screen p-5 flex flex-col">
+            {isGameOpen && (
+                <div className="fixed inset-0 z-50 w-screen h-screen bg-black bg-opacity-50">
+                    <div className="flex w-full h-full items-center justify-center text-white text-3xl uppercase text-center">
+                        En attente
+                        <br />
+                        de l' adversaire
+                    </div>
+                </div>
+            )}
+            {isGameOver && (
+                <div className="fixed inset-0 z-50 w-screen h-screen bg-white">
+                    <div className="flex flex-col w-full h-full items-center justify-center uppercase text-center">
+                        {winner && winner.hash === playerHash ? (
+                            <p className="text-4xl uppercase text-blue-500">
+                                Gagné
+                            </p>
+                        ) : (
+                            <p className="text-4xl uppercase text-red-500">
+                                Perdu
+                            </p>
+                        )}
+                        <Link href="/">
+                            <button className="btn-blue mt-4">
+                                Retourner à l'accueil
+                            </button>
+                        </Link>
+                    </div>
+                </div>
+            )}
             <h1 className="text-2xl">
                 Partie <span className="game-hash">{data.game}</span>
             </h1>

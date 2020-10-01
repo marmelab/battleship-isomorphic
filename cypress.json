@@ -1,6 +1,6 @@
 {
-    "baseUrl": "http://localhost:3000",
+    "baseUrl": "http://ec2-35-180-116-198.eu-west-3.compute.amazonaws.com",
     "env": {
-        "api_server": "http://localhost/api"
+        "api_server": "http://ec2-35-180-116-198.eu-west-3.compute.amazonaws.com/api"
     }
 }
