@@ -7,14 +7,18 @@ describe('Battleship Test', () => {
         it('Opens the welcome page', () => {
             cy.visit('/');
             cy.contains('Welcome to the Battleship!');
+            cy.wait(2000);
         });
 
         it('Shows the opponent fleet', () => {
             cy.visit('/');
             cy.contains('Create new game').click();
 
+            cy.wait(2000);
+
             cy.contains('Voir la flotte Adverse').click();
             cy.get('.ship').should('not.exist');
+            cy.wait(2000);
         });
 
         it('Plays a complete game', () => {
