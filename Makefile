@@ -11,3 +11,6 @@ start: ## Start server
 
 test: ## Run tests
 	yarn test
+
+cypress-open: ## Open cypress
+	yarn cypress open

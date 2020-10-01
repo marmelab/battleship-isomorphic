@@ -46,7 +46,9 @@ function Game({ data, playerHash }) {
 
     return (
         <main className="w-screen p-5 flex flex-col">
-            <h1 className="text-2xl">Partie {data.game}</h1>
+            <h1 className="text-2xl">
+                Partie <span className="game-hash">{data.game}</span>
+            </h1>
             {isCurrentPlayer ? (
                 <h2 className="text-green-500 font-bold uppercase">
                     A moi de jouer
@@ -84,7 +86,7 @@ function Game({ data, playerHash }) {
                             {data.ships.map((ship, i) => (
                                 <div
                                     key={ship.id}
-                                    className="p-1"
+                                    className="ship p-1"
                                     style={formatGridAttributes(
                                         ship.grid_attributes
                                     )}
@@ -96,7 +98,7 @@ function Game({ data, playerHash }) {
                     </>
                 ) : (
                     <>
-                        <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
+                        <div className="shoots-grid absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
                             {shoots.map((shoot, i) => (
                                 <div
                                     key={shoot.id}
@@ -137,7 +139,7 @@ function Game({ data, playerHash }) {
                             ))}
                         </div>
                         {isCurrentPlayer && (
-                            <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
+                            <div className="shooting-grid absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
                                 {[...Array(10).keys()].map((square, x) =>
                                     [...Array(10).keys()].map((square, y) => (
                                         <div
