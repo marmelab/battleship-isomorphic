@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import * as api from '../../api';
 import Link from 'next/link';
-import { OpponentBoard, PlayerBoard } from '../../src';
+import { OpponentBoard, PlayerBoard, Sea } from '../../src';
 
 const GAME_OPEN = 'OPEN';
 const GAME_OVER = 'OVER';
@@ -156,11 +156,11 @@ export default function Game({ data, playerHash }) {
                 </h1>
                 {isCurrentPlayer ? (
                     <h2 className="text-green-500 font-bold uppercase">
-                        A vous de jouer !
+                        À vous de jouer !
                     </h2>
                 ) : (
                     <h2 className="text-orange-500 font-bold uppercase">
-                        En attente de l'adversaire
+                        En attente de votre adversaire
                     </h2>
                 )}
                 <div className="relative pb-full w-full max-w-lg">
@@ -170,14 +170,7 @@ export default function Game({ data, playerHash }) {
                         </div>
                     )}
 
-                    <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-                        {[...Array(100).keys()].map((square, i) => (
-                            <div
-                                key={i}
-                                className="w-full h-full bg-blue-500"
-                            ></div>
-                        ))}
-                    </div>
+                    <Sea />
 
                     {!isCurrentPlayer ? (
                         <PlayerBoard

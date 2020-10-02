@@ -1,4 +1,5 @@
 import { formatGridAttributes } from './formatGridAttributes';
+import { Shot } from './Shot';
 
 export function PlayerBoard({ ships, opponentShoots, opponentHits }) {
     return (
@@ -15,33 +16,13 @@ export function PlayerBoard({ ships, opponentShoots, opponentHits }) {
                 ))}
             </div>
             <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-                {opponentShoots.map((shoot, i) => (
-                    <div
-                        key={shoot.id}
-                        style={{
-                            gridRowStart: shoot.coordinates[0] + 1,
-                            gridColumnStart: shoot.coordinates[1] + 1,
-                        }}
-                    >
-                        <div className="flex w-full h-full items-center justify-center">
-                            <div className="w-1/2 h-1/2 bg-yellow-500 rounded-full"></div>
-                        </div>
-                    </div>
+                {opponentShoots.map((shot, i) => (
+                    <Shot shot={shot} color={'yellow'} />
                 ))}
             </div>
             <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
                 {opponentHits.map((hit, i) => (
-                    <div
-                        key={hit.id}
-                        style={{
-                            gridRowStart: hit.coordinates[0] + 1,
-                            gridColumnStart: hit.coordinates[1] + 1,
-                        }}
-                    >
-                        <div className="flex w-full h-full items-center justify-center">
-                            <div className="w-1/2 h-1/2 bg-red-500 rounded-full"></div>
-                        </div>
-                    </div>
+                    <Shot shot={hit} color={'red'} />
                 ))}
             </div>
         </>
