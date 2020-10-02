@@ -1,15 +1,12 @@
 import { useState, useEffect } from 'react';
 import * as api from '../../api';
 import Link from 'next/link';
-
-const PLAYER = 'PLAYER';
-const OPPONENT = 'OPPONENT';
+import { OpponentBoard, PlayerBoard, Sea } from '../../src';
 
 const GAME_OPEN = 'OPEN';
 const GAME_OVER = 'OVER';
 
-function Game({ data, playerHash }) {
-    const [visibleBoard, setVisibleBoard] = useState(PLAYER);
+export default function Game({ data, playerHash }) {
     const [shoots, setShoots] = useState(data.shoots);
     const [hits, setHits] = useState(data.hits);
     const [currentPlayer, setCurrentPlayer] = useState(data.current_player);
@@ -18,28 +15,68 @@ function Game({ data, playerHash }) {
     );
     const [gameStatus, setGameStatus] = useState(data.game_status);
     const [winner, setWinner] = useState(data.winner);
+    const [opponentHits, setOpponentHits] = useState(data.hits);
+    const [opponentShoots, setOpponentShoots] = useState(data.hits);
+    const [displayMessage, setDisplayMessage] = useState(false);
+    const [message, setMessage] = useState('');
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [isLinkCopied, setIsLinkeCopied] = useState(false);
 
     const isCurrentPlayer = currentPlayer.hash === playerHash;
     const isGameOpen = gameStatus === GAME_OPEN;
     const isGameOver = gameStatus === GAME_OVER;
 
-    function toggleBoard() {
-        setVisibleBoard(visibleBoard === PLAYER ? OPPONENT : PLAYER);
-    }
-
     async function refreshGameState() {
+        setIsRefreshing(true);
         const res = await api.getGame(data.game, playerHash);
-        setCurrentPlayer(res.current_player);
-        setGameStatus(res.game_status);
-        setHits(res.hits);
-        setShoots(res.shoots);
-        setOpponentSunkShips(res.opponent_sunk_ships);
-        setWinner(res.winner);
+
+        setOpponentHits(res.opponent_hits);
+        setOpponentShoots(res.opponent_shoots);
+
+        setTimeout(function () {
+            setCurrentPlayer(res.current_player);
+            setGameStatus(res.game_status);
+            setHits(res.hits);
+            setShoots(res.shoots);
+            setOpponentSunkShips(res.opponent_sunk_ships);
+            setWinner(res.winner);
+            setIsRefreshing(false);
+        }, 2000);
     }
 
     async function shoot(x, y) {
+        if (isRefreshing) {
+            return;
+        }
+
         const res = await api.shoot(data.game, playerHash, [x, y]);
-        refreshGameState();
+        setHits(res.hits);
+        setShoots(res.shoots);
+
+        if (res.did_hit) {
+            setMessage('TOUCHE');
+        } else {
+            setMessage('LOUPE');
+        }
+        setDisplayMessage(true);
+
+        setTimeout(function () {
+            refreshGameState();
+            setDisplayMessage(false);
+        }, 2000);
+    }
+
+    function copyToClipBoard() {
+        var copyText = document.getElementById('joinLink');
+
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+        document.execCommand('copy');
+        setIsLinkeCopied(true);
+        setTimeout(function () {
+            setIsLinkeCopied(false);
+        }, 2000);
     }
 
     useEffect(() => {
@@ -67,13 +104,29 @@ function Game({ data, playerHash }) {
     }, [isGameOpen]);
 
     return (
-        <main className="w-screen h-screen p-5 flex flex-col">
+        <main className="container mx-auto">
             {isGameOpen && (
-                <div className="fixed inset-0 z-50 w-screen h-screen bg-black bg-opacity-50">
-                    <div className="flex w-full h-full items-center justify-center text-white text-3xl uppercase text-center">
-                        En attente
-                        <br />
-                        de l' adversaire
+                <div className="fixed inset-0 z-50 w-screen h-screen bg-white">
+                    <div className="flex flex-col w-full h-full items-center justify-center uppercase text-center">
+                        <p className="text-3xl mb-8">En attente</p>
+                        <p>Partagez ce lien pour rejoindre la partie</p>
+                        <input
+                            type="text"
+                            readOnly
+                            value={`${process.env.NEXT_PUBLIC_BASE_URL}/join/${data.game}`}
+                            id="joinLink"
+                            className="mb-4"
+                        />
+                        <button
+                            className={isLinkCopied ? 'btn-green' : 'btn-blue'}
+                            onClick={copyToClipBoard}
+                        >
+                            {isLinkCopied ? (
+                                <span>Lien copié</span>
+                            ) : (
+                                <span>Copier le lien</span>
+                            )}
+                        </button>
                     </div>
                 </div>
             )}
@@ -97,113 +150,43 @@ function Game({ data, playerHash }) {
                     </div>
                 </div>
             )}
-            <h1 className="text-2xl">
-                Partie <span className="game-hash">{data.game}</span>
-            </h1>
-            {isCurrentPlayer ? (
-                <h2 className="text-green-500 font-bold uppercase">
-                    A moi de jouer
-                </h2>
-            ) : (
-                <h2 className="text-orange-500 font-bold uppercase">
-                    En attente de l'adversaire
-                </h2>
-            )}
-            <div className="flex items-center justify-between my-2">
-                {visibleBoard === PLAYER ? (
-                    <h2>Ma flotte</h2>
+            <div className="flex flex-col items-center p-5">
+                <h1 className="text-2xl">
+                    Partie <span className="game-hash">{data.game}</span>
+                </h1>
+                {isCurrentPlayer ? (
+                    <h2 className="text-green-500 font-bold uppercase">
+                        À vous de jouer !
+                    </h2>
                 ) : (
-                    <h2>Flotte Adverse</h2>
+                    <h2 className="text-orange-500 font-bold uppercase">
+                        En attente de votre adversaire
+                    </h2>
                 )}
+                <div className="relative pb-full w-full max-w-lg">
+                    {displayMessage && (
+                        <div className="absolute z-50 flex w-full h-full items-center justify-center">
+                            <p className="text-4xl">{message}</p>
+                        </div>
+                    )}
 
-                <button onClick={() => toggleBoard()} className="btn-blue">
-                    {visibleBoard === PLAYER
-                        ? 'Voir la flotte Adverse'
-                        : 'Voir ma flotte'}
-                </button>
-            </div>
-            <div className="relative pb-full">
-                <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-                    {[...Array(100).keys()].map((square, i) => (
-                        <div
-                            key={i}
-                            className="w-full h-full bg-blue-500"
-                        ></div>
-                    ))}
+                    <Sea />
+
+                    {!isCurrentPlayer ? (
+                        <PlayerBoard
+                            ships={data.ships}
+                            opponentShoots={opponentShoots}
+                            opponentHits={opponentHits}
+                        />
+                    ) : (
+                        <OpponentBoard
+                            shoots={shoots}
+                            hits={hits}
+                            opponentSunkShips={opponentSunkShips}
+                            shoot={shoot}
+                        />
+                    )}
                 </div>
-                {visibleBoard === PLAYER ? (
-                    <>
-                        <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-                            {data.ships.map((ship, i) => (
-                                <div
-                                    key={ship.id}
-                                    className="ship p-1"
-                                    style={formatGridAttributes(
-                                        ship.grid_attributes
-                                    )}
-                                >
-                                    <div className="w-full h-full bg-green-500 rounded-full"></div>
-                                </div>
-                            ))}
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <div className="shoots-grid absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-                            {shoots.map((shoot, i) => (
-                                <div
-                                    key={shoot.id}
-                                    style={{
-                                        gridRowStart: shoot.coordinates[0] + 1,
-                                        gridColumnStart:
-                                            shoot.coordinates[1] + 1,
-                                    }}
-                                >
-                                    <div className="w-full h-full bg-yellow-500"></div>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-                            {hits.map((hit, i) => (
-                                <div
-                                    key={hit.id}
-                                    style={{
-                                        gridRowStart: hit.coordinates[0] + 1,
-                                        gridColumnStart: hit.coordinates[1] + 1,
-                                    }}
-                                >
-                                    <div className="w-full h-full bg-red-500"></div>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-                            {opponentSunkShips.map((ship, i) => (
-                                <div
-                                    key={ship.id}
-                                    className=""
-                                    style={formatGridAttributes(
-                                        ship.grid_attributes
-                                    )}
-                                >
-                                    <div className="w-full h-full bg-black"></div>
-                                </div>
-                            ))}
-                        </div>
-                        {isCurrentPlayer && (
-                            <div className="shooting-grid absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-                                {[...Array(10).keys()].map((square, x) =>
-                                    [...Array(10).keys()].map((square, y) => (
-                                        <div
-                                            key={x + y}
-                                            className="w-full h-full"
-                                            onClick={() => shoot(x, y)}
-                                        ></div>
-                                    ))
-                                )}
-                            </div>
-                        )}
-                    </>
-                )}
             </div>
         </main>
     );
@@ -216,25 +199,3 @@ export async function getServerSideProps(context) {
     );
     return { props: { data, playerHash: context.query.player_hash } };
 }
-
-const formatGridAttributes = str => {
-    const res = str
-        .replace(/\s/g, '')
-        .split(';')
-        .reduce((acc, attr) => {
-            const [key, value] = attr.split(':');
-            return {
-                ...acc,
-                [snakeToCamel(key)]: value,
-            };
-        }, {});
-
-    return res;
-};
-
-const snakeToCamel = str =>
-    str.replace(/([-_][a-z])/g, group =>
-        group.toUpperCase().replace('-', '').replace('_', '')
-    );
-
-export default Game;
