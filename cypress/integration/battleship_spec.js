@@ -48,6 +48,7 @@ describe('Battleship Test', () => {
                         )}/games/${game}?player_hash=${player2}`
                     ).then(response => {
                         cy.visit(`/games/${game}?player_hash=${player1}`);
+                        cy.wait(2000);
 
                         shoot(16);
                         switchPlayer();
@@ -139,7 +140,7 @@ describe('Battleship Test', () => {
 
             function shoot(position) {
                 cy.get('.shooting-grid').children().eq(position).click();
-                cy.wait(3000);
+                cy.wait(6000);
             }
         });
     });
