@@ -5,7 +5,7 @@ export function ShootingGrid({ shoot }) {
                 [...Array(10).keys()].map((square, y) => (
                     <div
                         key={x + y}
-                        className="w-full h-full"
+                        className="w-full h-full cursor-pointer hover:bg-blue-600"
                         onClick={() => shoot(x, y)}
                     ></div>
                 ))

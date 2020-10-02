@@ -21,6 +21,8 @@ export default function Game({ data, playerHash }) {
     const [message, setMessage] = useState('');
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isLinkCopied, setIsLinkeCopied] = useState(false);
+    const [heatMap, setHeatMap] = useState(data.heat_map.Cells);
+    const [isVisibleHeatMap, setIsVisibleHeatMap] = useState(false);
 
     const isCurrentPlayer = currentPlayer.hash === playerHash;
     const isGameOpen = gameStatus === GAME_OPEN;
@@ -34,6 +36,7 @@ export default function Game({ data, playerHash }) {
         setOpponentShoots(res.opponent_shoots);
 
         setTimeout(function () {
+            setHeatMap(res.heat_map.Cells);
             setCurrentPlayer(res.current_player);
             setGameStatus(res.game_status);
             setHits(res.hits);
@@ -154,15 +157,25 @@ export default function Game({ data, playerHash }) {
                 <h1 className="text-2xl">
                     Partie <span className="game-hash">{data.game}</span>
                 </h1>
-                {isCurrentPlayer ? (
-                    <h2 className="text-green-500 font-bold uppercase">
-                        À vous de jouer !
-                    </h2>
-                ) : (
-                    <h2 className="text-orange-500 font-bold uppercase">
-                        En attente de votre adversaire
-                    </h2>
-                )}
+                <div className="flex w-full justify-between items-center my-4">
+                    {isCurrentPlayer ? (
+                        <h2 className="text-green-500 font-bold uppercase">
+                            À vous de jouer !
+                        </h2>
+                    ) : (
+                        <h2 className="text-orange-500 font-bold uppercase">
+                            En attente de votre adversaire
+                        </h2>
+                    )}
+                    <button
+                        onClick={() => setIsVisibleHeatMap(!isVisibleHeatMap)}
+                        className="btn-blue text-sm"
+                    >
+                        {isVisibleHeatMap
+                            ? 'Cacher la Heat Map'
+                            : 'Voir la Heat Map'}
+                    </button>
+                </div>
                 <div className="relative pb-full w-full max-w-lg">
                     {displayMessage && (
                         <div className="absolute z-50 flex w-full h-full items-center justify-center">
@@ -184,6 +197,8 @@ export default function Game({ data, playerHash }) {
                             hits={hits}
                             opponentSunkShips={opponentSunkShips}
                             shoot={shoot}
+                            heatMap={heatMap}
+                            isVisibleHeatMap={isVisibleHeatMap}
                         />
                     )}
                 </div>

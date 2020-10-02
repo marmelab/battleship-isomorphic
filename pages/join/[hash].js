@@ -8,7 +8,7 @@ function Join({ gameHash, playerHash }) {
     useEffect(() => {
         if (gameHash && playerHash) {
             setTimeout(function () {
-                router.push(`/games/${gameHash}?player_hash=${playerHash}`);
+                router.replace(`/games/${gameHash}?player_hash=${playerHash}`);
             }, 2000);
         }
 
