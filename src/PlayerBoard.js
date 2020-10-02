@@ -16,13 +16,13 @@ export function PlayerBoard({ ships, opponentShoots, opponentHits }) {
                 ))}
             </div>
             <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-                {opponentShoots.map((shot, i) => (
-                    <Shot shot={shot} color={'yellow'} />
+                {opponentShoots.map(shot => (
+                    <Shot key={shot.id} shot={shot} color={'yellow'} />
                 ))}
             </div>
             <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-                {opponentHits.map((hit, i) => (
-                    <Shot shot={hit} color={'red'} />
+                {opponentHits.map(hit => (
+                    <Shot key={hit.id} shot={hit} color={'red'} />
                 ))}
             </div>
         </>

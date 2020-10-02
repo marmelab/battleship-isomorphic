@@ -6,17 +6,17 @@ export function OpponentBoard({ shoots, hits, opponentSunkShips, shoot }) {
     return (
         <>
             <div className="shoots-grid absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-                {shoots.map((shot, i) => (
-                    <Shot shot={shot} color={'yellow'} />
+                {shoots.map(shot => (
+                    <Shot key={shot.id} shot={shot} color={'yellow'} />
                 ))}
             </div>
             <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-                {hits.map((hit, i) => (
-                    <Shot shot={hit} color={'red'} />
+                {hits.map(hit => (
+                    <Shot key={hit.id} shot={hit} color={'red'} />
                 ))}
             </div>
             <div className="absolute grid grid-cols-10 grid-rows-10 w-full h-full gap-px max-w-lg max-h-lg">
-                {opponentSunkShips.map((ship, i) => (
+                {opponentSunkShips.map(ship => (
                     <div
                         key={ship.id}
                         style={formatGridAttributes(ship.grid_attributes)}
