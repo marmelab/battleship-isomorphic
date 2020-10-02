@@ -10,16 +10,16 @@ describe('Battleship Test', () => {
             cy.wait(2000);
         });
 
-        it('Shows the opponent fleet', () => {
-            cy.visit('/');
-            cy.contains('Create new game').click();
+        // it('Shows the opponent fleet', () => {
+        //     cy.visit('/');
+        //     cy.contains('Create new game').click();
 
-            cy.wait(2000);
+        //     cy.wait(2000);
 
-            cy.contains('Voir la flotte Adverse').click();
-            cy.get('.ship').should('not.exist');
-            cy.wait(2000);
-        });
+        //     cy.contains('Voir la flotte Adverse').click();
+        //     cy.get('.ship').should('not.exist');
+        //     cy.wait(2000);
+        // });
 
         it('Plays a complete game', () => {
             let game;
@@ -48,7 +48,6 @@ describe('Battleship Test', () => {
                         )}/games/${game}?player_hash=${player2}`
                     ).then(response => {
                         cy.visit(`/games/${game}?player_hash=${player1}`);
-                        cy.contains('Voir la flotte Adverse').click();
 
                         shoot(16);
                         switchPlayer();
@@ -136,12 +135,11 @@ describe('Battleship Test', () => {
                 currentPlayer = currentPlayer === player1 ? player2 : player1;
 
                 cy.visit(`/games/${game}?player_hash=${currentPlayer}`);
-                cy.contains('Voir la flotte Adverse').click();
             }
 
             function shoot(position) {
                 cy.get('.shooting-grid').children().eq(position).click();
-                cy.wait(1000);
+                cy.wait(3000);
             }
         });
     });
